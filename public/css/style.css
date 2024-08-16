@@ -1,0 +1,177 @@
+*{
+    margin: 0;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.container{
+    flex: 1;
+}
+
+h2{
+    font-family: "Josefin Sans", sans-serif;
+    font-weight: 700;
+}
+
+/*          NAVBAR          */
+.nav{
+    top:0;
+    position:sticky;
+    background-color: white;
+    font-family: "Josefin Sans", sans-serif;
+    font-weight: 700;
+    z-index: 9;
+}
+.navbar{
+    display: flex;
+    align-items: center;
+    gap: 18rem;
+    padding: 1rem 1rem;
+}
+
+.logo{
+    height: 3rem;
+    width: 14rem;
+    background-image:url("/images/logo2.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+
+.opts a{
+    text-decoration: none;
+    color: #212121d3;
+    margin: 0 0.5rem;
+    padding: 6px;
+    border: 2px solid transparent;
+    border-radius: 1rem;
+}
+.opts a:hover{
+    background-color: #e7e7e29a;
+
+}
+
+/*          FOOTER          */
+.f-info{
+    height: 5.25rem;
+    background-color: #ebebeb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 3px;
+    font-family: "Josefin Sans", sans-serif;
+    font-weight: 500;
+}
+
+.f-info-icons a{
+    margin:0 0.5rem;
+    color: #212121;
+}
+
+.f-info-links a{
+    margin:0 2px;
+    text-decoration: none;
+    color: #212121;
+}
+.f-info-links a:hover{
+    text-decoration: underline;
+}
+
+/*          INDEX Listings          */
+.cards{
+    display:flex;
+    width: 100%;
+    justify-content: center;
+    height: fit-content;
+    flex-wrap: wrap;
+}
+.card{
+    height: 22rem;
+    width: 22rem;
+    margin: 2rem 0 2rem 2rem;
+}
+.card img{
+    height: 19rem;
+    width: 19rem;
+    border-radius: 1rem;
+}
+.card-text{
+    margin-left: 0.5rem;
+}
+
+.card:hover{
+    opacity: 0.7;
+}
+
+
+/*          SHOW Listings          */
+.show-card{
+    display: flex;
+    justify-content: center;  
+    flex-direction: column;
+    align-items: center;
+    
+}
+.show-card-img{
+    border-radius: 1rem;
+    height: 25rem;
+    width: 27rem;
+}
+.show-card-text{
+    margin: 1rem 30rem; 
+    word-spacing: 2px;
+    line-height: 1.6rem;
+    font-family: "Josefin Sans", sans-serif;
+    
+}
+.show-card-text span{
+    text-decoration: underline;
+    font-family: "Josefin Sans", sans-serif;
+    font-weight: 700;
+}
+
+.show-opts{
+    display: flex;
+    justify-content: center;
+    gap: 5rem ;
+    align-items: center;
+}
+.show-opts a ,button{
+    background-color: #fe424d;
+    border-radius: 5px;
+    color: #ffff;
+    text-decoration: none;
+    padding: 5px 10px;
+    word-spacing: 2px;
+    line-height: 1.6rem;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+/*          New And Edit Listings          */
+.new-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: fit-content;
+    padding: 0 1rem;
+    align-items: center;
+    font-family: "Josefin Sans", sans-serif;
+}
+.new-content div{
+    display: flex;
+    flex-direction: column;
+    width: 35rem;
+    margin: 0.6rem;
+    gap: 5px;
+    letter-spacing: 1px;
+}
+.form-control{
+    padding: 5px;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    min-height: 1.5rem;
+    border-color: #e7e7e282;
+}

@@ -1,0 +1,44 @@
+<% layout("/layouts/boilerplate.ejs") %>
+  <body>
+    <h2 style="margin-left: 25.5rem;">Create a New Listing</h2>
+    
+    <div class="new-content">
+      <form method="POST" action="/listings">
+  
+        <div class="title">
+          <label for="title" class="form-label">Title</label>
+          <input name="listing[title]" placeholder="Add a title" type="text" class="form-control" required/>
+        </div>
+  
+        <div class="descp">
+          <label for="description" class="form-label">Description</label>
+          <textarea name="listing[description]" placeholder="Add description" class="form-control" required></textarea>
+        </div>
+  
+        <div class="frimg">
+          <label for="image " class="form-label">Image Link</label>
+          <input name="listing[image]" placeholder="Add image url" type="text" class="form-control"/>
+        </div>
+  
+        <div class="price">
+          <label for="price" class="form-label" required>Price</label>
+          <input name="listing[price]" placeholder="Enter price" type="number" class="form-control"/>
+        </div>
+  
+        <div class="country">
+          <label for="country" class="form-label" required>Counrty</label>
+          <input name="listing[country]" placeholder="India" type="text" class="form-control"/>
+        </div>
+  
+        <div class="location">
+          <label for="location" class="form-label" required>Location</label>
+          <input name="listing[location]" placeholder="Enter location" type="text" class="form-control"/>
+        </div>
+
+          <button style="border: none; background-color: #fe424d; margin-left: 0.7rem;">Add</button>
+
+      </form>
+
+    </div>
+
+  </body>

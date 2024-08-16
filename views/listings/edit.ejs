@@ -1,0 +1,44 @@
+<% layout("/layouts/boilerplate.ejs") %>
+  <body>
+    <h2 style="margin-left: 25.5rem;">Edit your Listing</h2>
+
+    <div class="new-content">
+      <form method="POST" action="/listings/<%= listing._id %>?_method=PUT">
+
+        <div class="title">
+          <label for="title" class="form-label">Title</label>
+          <input name="listing[title]" value="<%= listing.title %>" type="text" />
+        </div>
+
+        <div class="descp">
+          <label for="description" class="form-label">Description</label>
+          <textarea name="listing[description]"><%= listing.description %></textarea>
+        </div>
+
+        <div class="frimg">
+          <label for="image " class="form-label">Image Link</label>
+          <input name="listing[image]" value="<%= listing.image %>" type="text" />
+        </div>
+        
+        <div class="price">
+          <label for="price" class="form-label">Price</label>
+          <input name="listing[price]" value="<%= listing.price %>" type="number" />
+        </div>
+        
+        <div class="country">
+          <label for="country" class="form-label">Counrty</label>
+          <input name="listing[country]" value="<%= listing.country %>" type="text"/>
+        </div>
+
+        <div class="location">
+          <label for="location" class="form-label">Location</label>
+          <input name="listing[location]" value="<%= listing.location %>" type="text"/>
+        </div>
+
+        <button style="border: none; background-color: #fe424d; margin-left: 0.7rem;">Edit</button>
+
+      </form>
+
+    </div>
+
+  </body>
