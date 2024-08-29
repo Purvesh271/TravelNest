@@ -5,6 +5,7 @@ body{
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 .container{
     flex: 1;
@@ -148,6 +149,7 @@ h2{
     word-spacing: 2px;
     line-height: 1.6rem;
     font-family: "Josefin Sans", sans-serif;
+    cursor: pointer;
 }
 
 /*          New And Edit Listings          */
@@ -175,3 +177,54 @@ h2{
     min-height: 1.5rem;
     border-color: #e7e7e282;
 }
+
+/*          Reviews Styling         */
+.comment-row{
+    display:flex;
+    width: 100%;
+    justify-content: center;
+    height: fit-content;
+    flex-wrap: wrap;
+    margin-left: 15rem;
+
+}
+
+.comment-card {
+    width: 100%;
+    max-width: 600px;
+    height: fit-content;
+    margin: 22px 0;
+    padding: 15px 20px;
+    background-color: #f9f9f9;
+    border-left: 4px solid red;
+    border-radius: 5px;
+    font-family: 'Arial', sans-serif;
+}
+
+.comment-header {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comment-body {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+    margin-top: 5px;
+}
+
+.comment-card button{
+    cursor: pointer;
+    background-color: #212121;
+    border-radius: 7px;
+    color: #ffff;
+    text-decoration: none;
+    padding: 2px 7px;
+    word-spacing: 2px;
+    line-height: 1.2rem;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+

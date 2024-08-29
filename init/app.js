@@ -1,9 +1,10 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); //mongo shell
 
-const Data = require('./data.js');
+const Data = require('./data.js'); //data of hotels
 
-const Listing = require('../models/listings.js');
+const Listing = require('../models/listings.js'); //schema
 
+//mongo connection
 main()
     .then((res)=>{
         console.log("mongoose connection successful");
@@ -15,6 +16,7 @@ async function main() {
       
 };
 
+//insert data into the listings collection
 Listing.insertMany(Data.data).then((res) =>{
     console.log("saved");
 }).catch((err) =>{

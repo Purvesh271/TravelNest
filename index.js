@@ -5,9 +5,16 @@ const mongoose = require('mongoose');
 
 const methodOverride = require("method-override");
 
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
+const session = require("express-session");
+
+const flash = require("connect-flash");
 
 //databases
 const Listing = require('./models/listings.js');
+const Review = require('./models/review.js');
 
 //connection to mongoose server
 main()
@@ -41,6 +48,26 @@ app.listen(8080,()=>{
     console.log("app listening on port: 8080");
 });
 
+//express-session
+const sessionOptions = {
+    secret: "code",
+    resave: false,
+    saveuninitialized: true,
+
+    cookie:{
+        expires: Date.now() + 7 *24 * 60 * 60 * 1000, //One Week
+        maxAge: 7 *24 * 60 * 60 * 1000,
+        httpOnly: true,
+    },
+};
+
+app.use(session(sessionOptions));
+app.use(flash());
+
+app.use((req,res,next) => {
+    res.locals.success = req.flash("success");
+    next();
+})
 
 //INDEX ROUTE
 app.get("/listings",async (req,res)=>{
@@ -56,15 +83,21 @@ app.get("/listings/new", (req,res)=>{
 });
 
 app.post("/listings", async (req, res) => {
-    const newListing = new Listing(req.body.listing);
-    await newListing.save();
-    res.redirect("/listings");
+    try{
+        const newListing = new Listing(req.body.listing);
+        await newListing.save();
+        req.flash("success","New Listing Created!");
+        res.redirect("/listings");
+    }catch(err){
+        next(err);
+    }
+
 });
 
 //SHOW ROUTE
 app.get("/listings/:id", async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate("reviews");
     res.render("./listings/show.ejs", { listing });
 });
 
@@ -73,6 +106,10 @@ app.get("/listings/:id", async (req, res) => {
 app.get("/listings/:id/edit", async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
+    
+    if(!listing){
+        res.redirect("/listings");
+    }
     res.render("listings/edit.ejs", { listing });
 });
 
@@ -91,8 +128,29 @@ app.delete("/listings/:id", async (req,res)=>{
     res.redirect("/listings"); 
 });
 
+//REVIEWS ROUTE
+app.post("/listings/:id/reviews", async (req,res)=>{
+    const listing = await Listing.findById(req.params.id);
+    let newReview = new Review(req.body.review)
+
+    listing.reviews.push(newReview);
+
+    await newReview.save();
+    await listing.save();
+    console.log("Review saved");
+    res.redirect(`/listings/${listing._id}`);
+});
+
+//DELETE REVIEWS ROUTE
+app.delete("/listings/:id/reviews/:reviewId", async (req,res)=>{
+    let { id, reviewId } =req.params;
+    await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+
+    res.redirect(`/listings/${id}`); 
+});
 
 // ERROR MIDDLEWARE
 app.use("*",async(err,req,res,next)=>{
-    
+    res.send("Something went wrong!");
 })
