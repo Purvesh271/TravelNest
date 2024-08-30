@@ -12,11 +12,11 @@ const session = require("express-session");
 
 const flash = require("connect-flash");
 
-const userRouter = require("./routes/user.js");
 
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
+const userRouter = require("./routes/user.js");
 const {isLoggedIn} = require("./middleware.js");
 
 //databases
@@ -72,15 +72,6 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 app.use(flash());
 
-app.use((req, res, next) => {
-    res.locals.success = req.flash("success");
-    res.locals.error = req.flash("error");
-    res.locals.currUser = req.user;
-    next();
-});
-
-
-
 //Passport js setup (middlewares)
 app.use(passport.initialize());
 app.use(passport.session());
@@ -88,10 +79,16 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    res.locals.currUser = req.user;
+    next();
+});
 
-
-
+// USER ROUTE
 app.use("/", userRouter);
+
 //INDEX ROUTE
 app.get("/listings",async (req,res)=>{
     const allListings = await Listing.find({});
@@ -101,7 +98,7 @@ app.get("/",async(req,res)=>{
     res.redirect("/listings");
 })
 //NEW/CREATE ROUTE
-app.get("/listings/new", isLoggedIn, (req,res)=>{
+app.get("/listings/new", isLoggedIn, (req,res)=>{ 
     res.render("./listings/new.ejs");
 });
 
@@ -182,6 +179,8 @@ app.delete("/listings/:id/reviews/:reviewId", async (req,res)=>{
     req.flash("success","Review Deleted! ");
     res.redirect(`/listings/${id}`); 
 });
+
+
 
 // ERROR MIDDLEWARE
 app.use("*",async(err,req,res,next)=>{
