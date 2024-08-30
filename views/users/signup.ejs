@@ -1,0 +1,25 @@
+<% layout("/layouts/boilerplate.ejs") %>
+  <body>
+    <h1 style="margin-top: 1rem; margin-left: 26rem;">SignUp on TravelNest</h1>
+    <div style="padding: 1rem;" class="new-content">
+        <div>
+            <form action="/signup" method="POST">
+                <div class="title">
+                    <label for="username" class="form-label">Username</label>
+                    <input name="username" id="username" type="text" class="form-control" required/>
+                  </div>
+                <div class="title" style="margin-top: 2rem;">
+                    <label for="email" class="form-label">Email</label>
+                    <input name="email" id="email" type="email" class="form-control" required/>
+                  </div>
+                <div class="title" style="margin-top: 2rem;">
+                    <label for="password" class="form-label">Password</label>
+                    <input name="password" id="password" type="password" class="form-control" required/>
+                  </div>
+
+                  <button style="border: none; background-color: #fe424d; margin: 1rem 15rem;">SignUp</button>
+            </form>
+        </div>
+    </div>
+
+  </body>

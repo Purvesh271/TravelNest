@@ -9,7 +9,13 @@
             <a href="/listings/new">Add New Listing</a>
         </div>
         <div class="profile">
-    
+            <% if(!currUser){ %>
+                <a href="/signup">Sign up</a>
+                <a href="/login">Log in</a>
+            <%}%> 
+            <% if(currUser){ %>
+                <a href="/logout">Log out</a>
+            <%}%>
         </div>
     </div>
     <hr style="margin-bottom: 1.25rem;"/>

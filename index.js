@@ -12,9 +12,17 @@ const session = require("express-session");
 
 const flash = require("connect-flash");
 
+const userRouter = require("./routes/user.js");
+
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+
+const {isLoggedIn} = require("./middleware.js");
+
 //databases
 const Listing = require('./models/listings.js');
 const Review = require('./models/review.js');
+const User = require('./models/user.js');
 
 //connection to mongoose server
 main()
@@ -52,7 +60,7 @@ app.listen(8080,()=>{
 const sessionOptions = {
     secret: "code",
     resave: false,
-    saveuninitialized: true,
+    saveUninitialized: true,
 
     cookie:{
         expires: Date.now() + 7 *24 * 60 * 60 * 1000, //One Week
@@ -66,19 +74,32 @@ app.use(flash());
 
 app.use((req,res,next) => {
     res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    res.locals.currUser = req.user;
     next();
 })
 
+//Passport js setup (middlewares)
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+
+
+app.use("/", userRouter);
 //INDEX ROUTE
 app.get("/listings",async (req,res)=>{
     const allListings = await Listing.find({});
     res.render("./listings/index.ejs",{allListings});
 });
 app.get("/",async(req,res)=>{
-    res.redirect("/listings")
+    res.redirect("/listings");
 })
 //NEW/CREATE ROUTE
-app.get("/listings/new", (req,res)=>{
+app.get("/listings/new", isLoggedIn, (req,res)=>{
     res.render("./listings/new.ejs");
 });
 
@@ -103,7 +124,7 @@ app.get("/listings/:id", async (req, res) => {
 
 
 //EDIT ROUTE
-app.get("/listings/:id/edit", async (req, res) => {
+app.get("/listings/:id/edit", isLoggedIn, async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
     
@@ -114,14 +135,14 @@ app.get("/listings/:id/edit", async (req, res) => {
 });
 
 //UPDATE ROUTE
-app.put("/listings/:id", async (req, res) => {
+app.put("/listings/:id", isLoggedIn, async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     res.redirect(`/listings/${id}`);
 });
 
 //DELETE ROUTE
-app.delete("/listings/:id", async (req,res)=>{
+app.delete("/listings/:id", isLoggedIn, async (req,res)=>{
     let { id } =req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
     console.log(deletedListing);
