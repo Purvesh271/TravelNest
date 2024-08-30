@@ -72,12 +72,14 @@ const sessionOptions = {
 app.use(session(sessionOptions));
 app.use(flash());
 
-app.use((req,res,next) => {
+app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.currUser = req.user;
     next();
-})
+});
+
+
 
 //Passport js setup (middlewares)
 app.use(passport.initialize());
@@ -119,6 +121,11 @@ app.post("/listings", async (req, res) => {
 app.get("/listings/:id", async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id).populate("reviews");
+
+    if(!listing){
+        req.flash("error", "Listing does not exist!");
+        res.redirect("/listings");
+    }
     res.render("./listings/show.ejs", { listing });
 });
 
@@ -129,6 +136,7 @@ app.get("/listings/:id/edit", isLoggedIn, async (req, res) => {
     const listing = await Listing.findById(id);
     
     if(!listing){
+        req.flash("error", "Listing does not exist!");
         res.redirect("/listings");
     }
     res.render("listings/edit.ejs", { listing });
@@ -138,6 +146,7 @@ app.get("/listings/:id/edit", isLoggedIn, async (req, res) => {
 app.put("/listings/:id", isLoggedIn, async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    req.flash("success","Listing Updated!");
     res.redirect(`/listings/${id}`);
 });
 
@@ -146,6 +155,7 @@ app.delete("/listings/:id", isLoggedIn, async (req,res)=>{
     let { id } =req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
     console.log(deletedListing);
+    req.flash("success","Listing Deleted!");
     res.redirect("/listings"); 
 });
 
@@ -159,6 +169,7 @@ app.post("/listings/:id/reviews", async (req,res)=>{
     await newReview.save();
     await listing.save();
     console.log("Review saved");
+    req.flash("success","Review Added! ");
     res.redirect(`/listings/${listing._id}`);
 });
 
@@ -168,6 +179,7 @@ app.delete("/listings/:id/reviews/:reviewId", async (req,res)=>{
     await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
     await Review.findByIdAndDelete(reviewId);
 
+    req.flash("success","Review Deleted! ");
     res.redirect(`/listings/${id}`); 
 });
 

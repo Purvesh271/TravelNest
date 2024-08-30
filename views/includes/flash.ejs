@@ -1,0 +1,17 @@
+<% if (success && success.length) { %>
+    <div class="custom-alert custom-alert-success custom-alert-dismissible custom-fade custom-show">
+        <%= success %>
+        <button type="button" class="custom-close-btn" aria-label="Close" onclick="this.parentElement.style.display='none';">
+            &times;
+        </button>
+    </div>
+<% } %>
+
+<% if (error && error.length) { %>
+    <div class="custom-alert custom-alert-danger custom-alert-dismissible custom-fade custom-show">
+        <%= error %>
+        <button type="button" class="custom-close-btn" aria-label="Close" onclick="this.parentElement.style.display='none';">
+            &times;
+        </button>
+    </div>
+<% } %>

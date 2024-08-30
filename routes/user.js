@@ -33,7 +33,6 @@ router.get("/login", (req,res) =>{
 router.post("/login", passport.authenticate("local", { failureRedirect: "/login", failureFlash: true }), async (req,res) =>{
     try{
         req.flash("success", "Welcome back to TravelNest! ");
-    
         res.redirect("/listings");
     }catch(err){
         req.flash("error", err.message);
