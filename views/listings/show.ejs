@@ -5,6 +5,7 @@
       <img src=" <%= listing.image %> " class="show-card-img" alt="listing image" />
       <div class="show-card-body">
         <p class="show-card-text">
+          <span>Owned by:</span> <i><%= listing.owner.username %></i><br/>
           <%= listing.description %><br/>
           <span>Price:</span> &#8377; <%= listing.price.toLocaleString("en-IN") %> /night<br/>
           <span>Location:</span> <%= listing.location %><br/>

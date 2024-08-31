@@ -17,6 +17,7 @@ async function main() {
 };
 
 //insert data into the listings collection
+Data.data = Data.data.map((obj) => ({...obj, owner: '66d3603c476cdf91146dd1fe'}));
 Listing.insertMany(Data.data).then((res) =>{
     console.log("saved");
 }).catch((err) =>{

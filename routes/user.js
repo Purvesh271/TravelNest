@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const User = require('../models/user.js');
 const passport = require("passport");
-
+const { saveRedirectUrl } = require("../middleware.js");
 
 //SignUP Route
 router.get("/signup", (req,res) =>{
@@ -16,9 +16,15 @@ router.post("/signup", async (req,res) =>{
         const registeredUser = await User.register(newUser, password);
     
         console.log(registeredUser);
-        req.flash("success", "Welcome to TravelNest");
+
+        req.login(registeredUser, (err)=>{
+            if (err){
+                return next(err);
+            }
+            req.flash("success", "Welcome to TravelNest");
     
-        res.redirect("/listings");
+            res.redirect("/listings");
+        });
     }catch(err){
         req.flash("error", err.message);
         res.redirect("/signup");
@@ -30,10 +36,13 @@ router.get("/login", (req,res) =>{
     res.render("users/login.ejs");
 });
 
-router.post("/login", passport.authenticate("local", { failureRedirect: '/login', failureFlash: true }), async (req,res) =>{
+router.post("/login", saveRedirectUrl, passport.authenticate("local", { failureRedirect: '/login', failureFlash: true }), 
+async (req,res) =>{
     try{
         req.flash("success", "Welcome back to TravelNest! ");
-        res.redirect("/listings");
+
+        let redirectUrl = res.locals.redirectUrl || "/listings";
+        res.redirect(redirectUrl);
     }catch(err){
         req.flash("error", err.message);
         res.redirect("/signup");

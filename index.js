@@ -105,6 +105,7 @@ app.get("/listings/new", isLoggedIn, (req,res)=>{
 app.post("/listings", async (req, res) => {
     try{
         const newListing = new Listing(req.body.listing);
+        newListing.owner = req.user._id;
         await newListing.save();
         req.flash("success","New Listing Created!");
         res.redirect("/listings");
@@ -117,7 +118,7 @@ app.post("/listings", async (req, res) => {
 //SHOW ROUTE
 app.get("/listings/:id", async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews");
+    const listing = await Listing.findById(id).populate("reviews").populate("owner");
 
     if(!listing){
         req.flash("error", "Listing does not exist!");
@@ -184,5 +185,5 @@ app.delete("/listings/:id/reviews/:reviewId", async (req,res)=>{
 
 // ERROR MIDDLEWARE
 app.use("*",async(err,req,res,next)=>{
-    res.send("Something went wrong!");
+    req.flash("success","Something went wrong!");
 })
