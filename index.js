@@ -13,6 +13,7 @@ const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 
 const flash = require("connect-flash");
 
@@ -33,6 +34,8 @@ const Review = require('./models/review.js');
 const User = require('./models/user.js');
 
 //connection to mongoose server
+// const mongoUrl ='mongodb://127.0.0.1:27017/airbnb'
+const dbUrl = process.env.ATLASDB_URL;
 main()
     .then((res) =>{
         console.log("mongodb connection successful");
@@ -41,7 +44,7 @@ main()
 
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/airbnb');
+  await mongoose.connect(dbUrl);
 
 };
 
@@ -64,8 +67,19 @@ app.listen(8080,()=>{
     console.log("app listening on port: 8080");
 });
 
-//express-session
+//Mongo and Express -Session
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: process.env.SECRET,
+    },
+    touchAfter: 24 * 3600 , //adter 1 day the session will reset 
+});
+
+
 const sessionOptions = {
+    store,
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
@@ -76,6 +90,7 @@ const sessionOptions = {
         httpOnly: true,
     },
 };
+
 
 app.use(session(sessionOptions));
 app.use(flash());

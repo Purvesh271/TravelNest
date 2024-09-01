@@ -4,17 +4,16 @@
             
         </div>
         <div class="opts">
-            <a href="/">Home</a>
-            <a href="/listings">All Listings</a>
-            <a href="/listings/new">Add New Listing</a>
+            <a href="/listings">Home</a>
+            <a href="/listings/new">Post Your Property</a>
         </div>
         <div class="profile">
             <% if(!currUser){ %>
-                <a href="/signup">Sign up</a>
-                <a href="/login">Log in</a>
+                <a href="/signup"><b>Sign up</b></a>
+                <a href="/login"><b>Log in</b></a>
             <%}%> 
             <% if(currUser){ %>
-                <a href="/logout">Log out</a>
+                <a href="/logout" style="margin-left: 4.5rem;"><b>Log out</b></a>
             <%}%>
             
         </div>
