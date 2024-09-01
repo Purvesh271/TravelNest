@@ -16,7 +16,6 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-const userRouter = require("./routes/user.js");
 const {isLoggedIn, isOwner, isReviewAuthor} = require("./middleware.js");
 
 //databases
@@ -86,14 +85,23 @@ app.use((req, res, next) => {
     next();
 });
 
-// USER ROUTE
+//ROUTERS
+const userRouter = require("./routes/user.js");
+const reviewRouter = require("./routes/review.js");
+
+//CONTROLLERS
+const listingController = require("./controllers/listings.js");
+const reviewController = require("./controllers/reviews.js");
+
+//USER ROUTES
 app.use("/", userRouter);
 
+//REVIEW ROUTES
+app.use("/listings/:id/reviews", reviewRouter);
+
 //INDEX ROUTE
-app.get("/listings",async (req,res)=>{
-    const allListings = await Listing.find({});
-    res.render("./listings/index.ejs",{allListings});
-});
+app.get("/listings",listingController.index);
+
 app.get("/",async(req,res)=>{
     res.redirect("/listings");
 })
@@ -102,94 +110,23 @@ app.get("/listings/new", isLoggedIn, (req,res)=>{
     res.render("./listings/new.ejs");
 });
 
-app.post("/listings", async (req, res) => {
-    try{
-        const newListing = new Listing(req.body.listing);
-        newListing.owner = req.user._id;
-        await newListing.save();
-        req.flash("success","New Listing Created!");
-        res.redirect("/listings");
-    }catch(err){
-        next(err);
-    }
-
-});
+app.post("/listings", listingController.createListing);
 
 //SHOW ROUTE
-app.get("/listings/:id", async (req, res) => {
-    let { id } = req.params;
-    const listing = await Listing.findById(id).populate({
-        path: "reviews",
-        populate: { path: "author" }
-    }).populate("owner");
-
-    if (!listing) {
-        req.flash("error", "Listing does not exist!");
-        return res.redirect("/listings");
-    }
-
-    res.render("./listings/show.ejs", { listing });
-});
-
+app.get("/listings/:id",listingController.showListing );
 
 
 //EDIT ROUTE
-app.get("/listings/:id/edit", isLoggedIn, isOwner, async (req, res) => {
-    let { id } = req.params;
-    const listing = await Listing.findById(id);
-    
-    if(!listing){
-        req.flash("error", "Listing does not exist!");
-        res.redirect("/listings");
-    }
-    res.render("listings/edit.ejs", { listing });
-});
+app.get("/listings/:id/edit", isLoggedIn, isOwner, listingController.editListing);
 
 //UPDATE ROUTE
-app.put("/listings/:id", isLoggedIn, isOwner, async (req, res) => {
-    let { id } = req.params;
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-    req.flash("success","Listing Updated!");
-    res.redirect(`/listings/${id}`);
-});
+app.put("/listings/:id", isLoggedIn, isOwner, listingController.updateListing);
 
 //DELETE ROUTE
-app.delete("/listings/:id", isLoggedIn, isOwner, async (req,res)=>{
-    let { id } =req.params;
-    let deletedListing = await Listing.findByIdAndDelete(id);
-    console.log(deletedListing);
-    req.flash("success","Listing Deleted!");
-    res.redirect("/listings"); 
-});
-
-//REVIEWS ROUTE
-
-app.post("/listings/:id/reviews", isLoggedIn, async (req,res)=>{
-    let listing = await Listing.findById(req.params.id);
-    let newReview = new Review(req.body.review);
-    newReview.author = req.user._id;
-    listing.reviews.push(newReview);
-
-    await newReview.save();
-    await listing.save();
-    console.log("Review saved");
-    req.flash("success","Review Added! ");
-    res.redirect(`/listings/${listing._id}`);
-});
-
-//DELETE REVIEWS ROUTE
-app.delete("/listings/:id/reviews/:reviewId",isReviewAuthor, async (req,res)=>{
-    let { id, reviewId } =req.params;
-    await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
-    await Review.findByIdAndDelete(reviewId);
-
-    req.flash("success","Review Deleted! ");
-    res.redirect(`/listings/${id}`); 
-});
+app.delete("/listings/:id", isLoggedIn, isOwner, listingController.deleteListing);
 
 
-
-// ERROR MIDDLEWARE
+//ERROR MIDDLEWARE
 app.use("*",async(err,req,res,next)=>{
     req.flash("success","Something went wrong!");
 })
