@@ -14,30 +14,34 @@
       </div>
     </div>
     <br />
-    <div class="show-opts">
-      <a href="/listings/<%= listing._id %>/edit">Edit</a>
-      <br /><br />
-      <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
-        <button style="background-color: #212121;">Delete</button>
-      </form>
-    </div>
-
+    <% if(currUser && currUser._id.equals(listing.owner._id)) {%>
+      <div class="show-opts">
+        <a href="/listings/<%= listing._id %>/edit">Edit</a>
+        <br /><br />
+        <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
+          <button style="background-color: #212121;">Delete</button>
+        </form>
+      </div>
+    <% } %>
     <!-- Review -->
     <div style="margin-top: 1rem;" >
-      <hr style="margin: 1rem 7rem;" />
-      <h4 style="margin: 1rem 30rem;">Leave a Review</h4>
-      <form method="POST" action="/listings/<%= listing.id %>/reviews"  class="new-content">
-        <div>
-          <label for="rating" class="form-label">Rating</label>
-          <input type="range" min="1" max="5" id="rating" name="review[rating]">
-        </div>
-        <div >
-          <label for="comment" class="form-label">Comments</label>
-          <textarea name="review[comment]" id="comment" style="border: 2px solid #e7e7e282; background-color: #e7e7e242;" ></textarea>
-        </div>
-        <button>Submit</button>
-      </form>
-      <hr style="margin: 1rem 7rem;"/>
+      <%if(currUser) {%>
+        <hr style="margin: 1rem 7rem;" />
+        <h4 style="margin: 1rem 30rem;">Leave a Review</h4>
+        <form method="POST" action="/listings/<%= listing.id %>/reviews"  class="new-content">
+          <div>
+            <label for="rating" class="form-label">Rating</label>
+            <input type="range" min="1" max="5" id="rating" name="review[rating]">
+          </div>
+          <div >
+            <label for="comment" class="form-label">Comments</label>
+            <textarea name="review[comment]" id="comment" style="border: 2px solid #e7e7e282; background-color: #e7e7e242;" ></textarea>
+          </div>
+          <button>Submit</button>
+        </form>
+        <hr style="margin: 1rem 7rem;"/> 
+      <% } %>
+
 
       <!-- Show reviews -->
       <h4 style="margin: 1rem 30rem;">All Reviews</h4>
@@ -45,14 +49,16 @@
       <div class="comment-row">
         <% for(review of listing.reviews){ %>
           <div class="comment-card">
-            <h5 class="comment-header">User 1246</h5>
+            <h5 class="comment-header">@<%=review.author.username%></h5>
             <p class="comment-body"><%=review.comment%></p> 
             <p class="comment-body"><%=review.rating%> Stars</p>
-            <form method="POST" action="/listings/<%= listing.id %>/reviews/<%=review._id%>?_method=DELETE">
-              <button>Delete</button>
-            </form>
-          </div>
+            <%if(currUser){%>
+              <form method="POST" action="/listings/<%= listing.id %>/reviews/<%=review._id%>?_method=DELETE">
+                <button>Delete</button>
+              </form>
+            <%}%>
 
+          </div>
 
         <%}%>
       </div>

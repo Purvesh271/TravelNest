@@ -17,7 +17,7 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
 const userRouter = require("./routes/user.js");
-const {isLoggedIn} = require("./middleware.js");
+const {isLoggedIn, isOwner, isReviewAuthor} = require("./middleware.js");
 
 //databases
 const Listing = require('./models/listings.js');
@@ -118,18 +118,23 @@ app.post("/listings", async (req, res) => {
 //SHOW ROUTE
 app.get("/listings/:id", async (req, res) => {
     let { id } = req.params;
-    const listing = await Listing.findById(id).populate("reviews").populate("owner");
+    const listing = await Listing.findById(id).populate({
+        path: "reviews",
+        populate: { path: "author" }
+    }).populate("owner");
 
-    if(!listing){
+    if (!listing) {
         req.flash("error", "Listing does not exist!");
-        res.redirect("/listings");
+        return res.redirect("/listings");
     }
+
     res.render("./listings/show.ejs", { listing });
 });
 
 
+
 //EDIT ROUTE
-app.get("/listings/:id/edit", isLoggedIn, async (req, res) => {
+app.get("/listings/:id/edit", isLoggedIn, isOwner, async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
     
@@ -141,7 +146,7 @@ app.get("/listings/:id/edit", isLoggedIn, async (req, res) => {
 });
 
 //UPDATE ROUTE
-app.put("/listings/:id", isLoggedIn, async (req, res) => {
+app.put("/listings/:id", isLoggedIn, isOwner, async (req, res) => {
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     req.flash("success","Listing Updated!");
@@ -149,7 +154,7 @@ app.put("/listings/:id", isLoggedIn, async (req, res) => {
 });
 
 //DELETE ROUTE
-app.delete("/listings/:id", isLoggedIn, async (req,res)=>{
+app.delete("/listings/:id", isLoggedIn, isOwner, async (req,res)=>{
     let { id } =req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
     console.log(deletedListing);
@@ -158,10 +163,11 @@ app.delete("/listings/:id", isLoggedIn, async (req,res)=>{
 });
 
 //REVIEWS ROUTE
-app.post("/listings/:id/reviews", async (req,res)=>{
-    const listing = await Listing.findById(req.params.id);
-    let newReview = new Review(req.body.review)
 
+app.post("/listings/:id/reviews", isLoggedIn, async (req,res)=>{
+    let listing = await Listing.findById(req.params.id);
+    let newReview = new Review(req.body.review);
+    newReview.author = req.user._id;
     listing.reviews.push(newReview);
 
     await newReview.save();
@@ -172,7 +178,7 @@ app.post("/listings/:id/reviews", async (req,res)=>{
 });
 
 //DELETE REVIEWS ROUTE
-app.delete("/listings/:id/reviews/:reviewId", async (req,res)=>{
+app.delete("/listings/:id/reviews/:reviewId",isReviewAuthor, async (req,res)=>{
     let { id, reviewId } =req.params;
     await Listing.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
     await Review.findByIdAndDelete(reviewId);

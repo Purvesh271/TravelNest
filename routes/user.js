@@ -36,18 +36,22 @@ router.get("/login", (req,res) =>{
     res.render("users/login.ejs");
 });
 
-router.post("/login", saveRedirectUrl, passport.authenticate("local", { failureRedirect: '/login', failureFlash: true }), 
-async (req,res) =>{
-    try{
-        req.flash("success", "Welcome back to TravelNest! ");
-
-        let redirectUrl = res.locals.redirectUrl || "/listings";
+router.post("/login", saveRedirectUrl, passport.authenticate("local", {
+    failureRedirect: '/login',
+    failureFlash: true
+}), (req, res) => {
+    try {
+        req.flash("success", "Welcome back to TravelNest!");
+        
+        let redirectUrl = res.locals.redirectUrl || "/listings"; 
+        req.session.redirectUrl = null; 
         res.redirect(redirectUrl);
-    }catch(err){
+    } catch (err) {
         req.flash("error", err.message);
-        res.redirect("/signup");
+        res.redirect("/login");
     }
 });
+
 
 //LogOut Route
 router.get("/logout", (req, res)=> {
