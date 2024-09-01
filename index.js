@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV != "production") {
+    require("dotenv").config();
+}
+
 const express = require('express');
 const app = express();
 
@@ -17,6 +21,11 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
 const {isLoggedIn, isOwner, isReviewAuthor} = require("./middleware.js");
+
+//Multer and Cloudinary setup
+const multer  = require('multer');
+const {storage} = require('./cloudConfig.js');
+const upload = multer({ storage });
 
 //databases
 const Listing = require('./models/listings.js');
@@ -57,7 +66,7 @@ app.listen(8080,()=>{
 
 //express-session
 const sessionOptions = {
-    secret: "code",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
 
@@ -78,6 +87,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//Flash middlewares
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
@@ -110,7 +120,7 @@ app.get("/listings/new", isLoggedIn, (req,res)=>{
     res.render("./listings/new.ejs");
 });
 
-app.post("/listings", listingController.createListing);
+app.post("/listings", upload.single("listing[image]"), listingController.createListing);
 
 //SHOW ROUTE
 app.get("/listings/:id",listingController.showListing );
@@ -120,7 +130,7 @@ app.get("/listings/:id",listingController.showListing );
 app.get("/listings/:id/edit", isLoggedIn, isOwner, listingController.editListing);
 
 //UPDATE ROUTE
-app.put("/listings/:id", isLoggedIn, isOwner, listingController.updateListing);
+app.put("/listings/:id", isLoggedIn, isOwner, upload.single("listing[image]"), listingController.updateListing);
 
 //DELETE ROUTE
 app.delete("/listings/:id", isLoggedIn, isOwner, listingController.deleteListing);

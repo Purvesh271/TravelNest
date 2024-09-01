@@ -2,7 +2,7 @@
   <body>
     <h2 style="margin: 1rem 30rem;"><%= listing.title %></h2>
     <div class="show-card">
-      <img src=" <%= listing.image %> " class="show-card-img" alt="listing image" />
+      <img src=" <%= listing.image.url %> " class="show-card-img" alt="listing image" />
       <div class="show-card-body">
         <p class="show-card-text">
           <span>Owned by:</span> <i><%= listing.owner.username %></i><br/>

@@ -3,7 +3,7 @@
     <h2 style="margin-left: 25.5rem;">Edit your Listing</h2>
 
     <div class="new-content">
-      <form method="POST" action="/listings/<%= listing._id %>?_method=PUT">
+      <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" enctype="multipart/form-data">
 
         <div class="title">
           <label for="title" class="form-label">Title</label>
@@ -15,9 +15,13 @@
           <textarea name="listing[description]"><%= listing.description %></textarea>
         </div>
 
+        <div class="edimg">
+          <img src = " <%= listing.image.url%>" />
+        </div>
+
         <div class="frimg">
-          <label for="image " class="form-label">Image Link</label>
-          <input name="listing[image]" value="<%= listing.image %>" type="text" />
+          <label for="image " class="form-label">Upload New Image</label>
+          <input name="listing[image]" type="file" />
         </div>
         
         <div class="price">

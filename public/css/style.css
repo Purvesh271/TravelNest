@@ -189,6 +189,11 @@ h2, h1{
     min-height: 1.5rem;
     border-color: #e7e7e282;
 }
+.edimg img{
+    height: 15rem;
+    width: 15rem;
+    overflow: hidden;
+}
 
 /*          Reviews Styling         */
 .comment-row{

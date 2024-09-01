@@ -3,7 +3,7 @@
     <h2 style="margin-left: 25.5rem;">Create a New Listing</h2>
     
     <div class="new-content">
-      <form method="POST" action="/listings">
+      <form method="POST" action="/listings" enctype="multipart/form-data">
   
         <div class="title">
           <label for="title" class="form-label">Title</label>
@@ -15,9 +15,13 @@
           <textarea name="listing[description]" placeholder="Add description" class="form-control" required></textarea>
         </div>
   
-        <div class="frimg">
+        <!-- <div class="frimg">
           <label for="image " class="form-label">Image Link</label>
           <input name="listing[image]" placeholder="Add image url" type="text" class="form-control"/>
+        </div> -->
+        <div class="frimg">
+          <label for="image " class="form-label">Upload Image</label>
+          <input name="listing[image]" type="file" class="form-control" required/>
         </div>
   
         <div class="price">
