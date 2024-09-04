@@ -1,23 +1,36 @@
 <div class="nav">
     <div class="navbar">
-        <div class="logo">
-            
-        </div>
-        <div class="opts">
-            <a href="/listings">Home</a>
-            <a href="/listings/new">Post Your Property</a>
-        </div>
-        <div class="profile">
-            <% if(!currUser){ %>
-                <a href="/signup"><b>Sign up</b></a>
-                <a href="/login"><b>Log in</b></a>
-            <%}%> 
-            <% if(currUser){ %>
-                <a href="/logout" style="margin-left: 4.5rem;"><b>Log out</b></a>
-            <%}%>
-            
-        </div>
-    </div>
-    <hr style="margin-bottom: 1.25rem;"/>
+        <div class="lobar">
+            <div class="logo">
 
+            </div>
+            <div class="hamburger-menu">
+                <div class="hamburger-bar"></div>
+                <div class="hamburger-bar"></div>
+                <div class="hamburger-bar"></div>
+            </div>
+
+        </div>
+
+        <div class="search-bar">
+            <form action="/listings/search" method="GET">
+                <input type="text" name="query" placeholder="Search by country..." class="search-input">
+                <button type="submit" class="search-button">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+        <nav class="nav-links">
+            <a href="/listings" class="nav-item">Home</a>
+            <a href="/listings/new" class="nav-item">Post Your Property</a>
+            <% if(!currUser) { %>
+                <a href="/signup" class="nav-item">Sign up</a>
+                <a href="/login" class="nav-item">Log in</a>
+            <% } %>
+            <% if(currUser) { %>
+                <a href="/logout" class="nav-item">Log out</a>
+            <% } %>
+        </nav>
+    </div>
+    <hr class="nav-separator">
 </div>

@@ -1,18 +1,18 @@
 <% layout("/layouts/boilerplate.ejs") %>
   <body>
-    <h2 style="margin-left: 25.5rem;">Edit your Listing</h2>
+    <h2 class="newh2">Edit your Listing</h2>
 
     <div class="new-content">
       <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" enctype="multipart/form-data">
 
         <div class="title">
           <label for="title" class="form-label">Title</label>
-          <input name="listing[title]" value="<%= listing.title %>" type="text" />
+          <input name="listing[title]" value="<%= listing.title %>" type="text" style="padding: 0.5rem 0.2rem;" />
         </div>
 
         <div class="descp">
           <label for="description" class="form-label">Description</label>
-          <textarea name="listing[description]"><%= listing.description %></textarea>
+          <textarea name="listing[description]" style="padding: 0.5rem 0.2rem;"><%= listing.description %></textarea>
         </div>
 
         <div class="edimg">
@@ -21,25 +21,25 @@
 
         <div class="frimg">
           <label for="image " class="form-label">Upload New Image</label>
-          <input name="listing[image]" type="file" />
+          <input name="listing[image]" type="file"/>
         </div>
         
         <div class="price">
           <label for="price" class="form-label">Price</label>
-          <input name="listing[price]" value="<%= listing.price %>" type="number" />
+          <input name="listing[price]" value="<%= listing.price %>" type="number" style="padding: 0.5rem 0.2rem;" />
         </div>
         
         <div class="country">
           <label for="country" class="form-label">Counrty</label>
-          <input name="listing[country]" value="<%= listing.country %>" type="text"/>
+          <input name="listing[country]" value="<%= listing.country %>" type="text" style="padding: 0.5rem 0.2rem;"/>
         </div>
 
         <div class="location">
           <label for="location" class="form-label">Location</label>
-          <input name="listing[location]" value="<%= listing.location %>" type="text"/>
+          <input name="listing[location]" value="<%= listing.location %>" type="text" style="padding: 0.5rem 0.2rem;"/>
         </div>
 
-        <button style="border: none; background-color: #fe424d; margin-left: 0.7rem;">Edit</button>
+        <button class="addbut">Edit</button>
 
       </form>
 

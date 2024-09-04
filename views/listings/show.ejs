@@ -1,6 +1,6 @@
 <% layout("/layouts/boilerplate.ejs") %>
   <body>
-    <h2 style="margin: 1rem 30rem;"><%= listing.title %></h2>
+    <h2 class="showh2"><%= listing.title %></h2>
     <div class="show-card">
       <img src=" <%= listing.image.url %> " class="show-card-img" alt="listing image" />
       <div class="show-card-body">
@@ -26,8 +26,8 @@
     <!-- Review -->
     <div style="margin-top: 1rem;" >
       <%if(currUser) {%>
-        <hr style="margin: 1rem 7rem;" />
-        <h4 style="margin: 1rem 30rem;">Leave a Review</h4>
+        <hr class="reviewhr"/>
+        <h4 class="reviewh4">Leave a Review</h4>
         <form method="POST" action="/listings/<%= listing.id %>/reviews"  class="new-content">
           <div>
             <!-- <input type="range" min="1" max="5" id="rating" name="review[rating]"> -->
@@ -51,14 +51,14 @@
             <label for="comment" class="form-label">Comments</label>
             <textarea name="review[comment]" id="comment" style="border: 2px solid #e7e7e282; background-color: #e7e7e242;" ></textarea>
           </div>
-          <button>Submit</button>
+          <button class="commsbut">Submit</button>
         </form>
-        <hr style="margin: 1rem 7rem;"/> 
+        <hr class="reviewhr"/> 
       <% } %>
 
 
       <!-- Show reviews -->
-      <h4 style="margin: 1rem 30rem;">All Reviews</h4>
+      <h4 class="reviewh4">All Reviews</h4>
       
       <div class="comment-row">
         <% for(review of listing.reviews){ %>

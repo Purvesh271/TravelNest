@@ -28,6 +28,29 @@ module.exports.createListing = async (req, res) => {
 
 };
 
+//search route
+module.exports.search = async (req, res) => {
+    const { query } = req.query;
+
+    try {
+        const foundListings = await Listing.find({
+            country: { $regex: query, $options: "i" } // Search by country only
+        });
+
+        if (foundListings.length === 0) {
+            req.flash("error", "No listings found in the specified country.");
+            return res.redirect("/listings");
+        }
+
+        res.render("./listings/search.ejs", { foundListings });
+    } catch (err) {
+        req.flash("error", "An error occurred during the search.");
+        console.error(err);
+        res.redirect("/listings");
+    }
+};
+
+
 //show route
 module.exports.showListing = async (req, res) => {
     let { id } = req.params;

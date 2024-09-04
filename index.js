@@ -137,6 +137,9 @@ app.get("/listings/new", isLoggedIn, (req,res)=>{
 
 app.post("/listings", upload.single("listing[image]"), listingController.createListing);
 
+//SEARCH ROUTE
+app.get('/listings/search', listingController.search);
+
 //SHOW ROUTE
 app.get("/listings/:id",listingController.showListing );
 

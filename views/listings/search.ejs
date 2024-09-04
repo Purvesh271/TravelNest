@@ -1,0 +1,26 @@
+<% layout("/layouts/boilerplate.ejs") %>
+<body>
+    <h2 class="indexh2">Search Results</h2>
+
+    <div class="cards">
+        <% if (foundListings.length > 0) { %>
+            <% for(let listing of foundListings) { %>
+    
+                <a href="/listings/<%= listing._id%>" style="color: #212121; text-decoration: none;">
+                    <div class="card" >    
+                        <img src=<%= listing.image.url%> class="card-img" alt="">
+                        <div class="card-body">       
+                            <p class="card-text">
+                                <b><%= listing.title %></b> <br>
+                                &#8377; <%= listing.price.toLocaleString("en-IN") %> /night<br>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+      
+            <% } %>
+            <% } else { %>
+                <p>No listings found.</p>
+            <% } %>
+    </div>
+</body>
